@@ -1,0 +1,18 @@
+{
+  "name": "prospine-admin-app",
+  "version": "1.0.0",
+  "description": "Electron desktop app for ProSpine Admin Portal",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["electron", "prospine", "admin", "webview"],
+  "author": "ProSpine Admin App",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^37.3.1"
+  }
+}

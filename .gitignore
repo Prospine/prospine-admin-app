@@ -1,0 +1,115 @@
+# Large files (over 100MB)
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+*.dmg
+*.iso
+*.img
+*.deb
+*.rpm
+
+# Video files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wmv
+*.flv
+*.webm
+
+# Audio files
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+
+# Image files (large formats)
+*.psd
+*.ai
+*.tiff
+*.tif
+*.raw
+*.cr2
+*.nef
+*.dng
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.temp
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Dependencies
+node_modules/
+bower_components/
+vendor/
+venv/
+env/
+.env
+.venv
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+out/
+target/
+bin/
+obj/
+
+# Package files
+*.war
+*.jar
+*.ear
+*.nar
+
+# Compiled files
+*.class
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Git LFS (for files you do want to track but are large)
+# Uncomment the following line if you're using Git LFS
+# *.large-extension filter=lfs diff=lfs merge=lfs -text
