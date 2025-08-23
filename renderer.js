@@ -1,103 +1,50 @@
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', function() {
     const webview = document.getElementById('webview');
-    const backBtn = document.getElementById('backBtn');
-    const forwardBtn = document.getElementById('forwardBtn');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const urlBar = document.getElementById('urlBar');
-    const homeBtn = document.getElementById('homeBtn');
+    const loadingMessage = document.getElementById('loadingMessage');
     const errorMessage = document.getElementById('errorMessage');
     
     const homeUrl = 'https://www.prospine.in/admin';
     
-    // Initialize buttons as disabled
-    backBtn.disabled = true;
-    forwardBtn.disabled = true;
-    
     // Webview event listeners
-    webview.addEventListener('dom-ready', function() {
-        console.log('Webview DOM ready');
-        updateNavigationButtons();
-    });
-    
     webview.addEventListener('did-start-loading', function() {
         console.log('Started loading');
-        refreshBtn.disabled = true;
-        refreshBtn.textContent = '⟳';
-        errorMessage.style.display = 'none';
+        loadingMessage.style.display = 'flex'; // Show loading message
+        errorMessage.style.display = 'none'; // Hide error message
     });
     
     webview.addEventListener('did-stop-loading', function() {
         console.log('Stopped loading');
-        refreshBtn.disabled = false;
-        updateNavigationButtons();
-        updateUrlBar();
+        loadingMessage.style.display = 'none'; // Hide loading message
     });
     
     webview.addEventListener('did-fail-load', function(event) {
         console.error('Failed to load:', event);
-        errorMessage.style.display = 'block';
-        refreshBtn.disabled = false;
+        loadingMessage.style.display = 'none'; // Hide loading message
+        errorMessage.style.display = 'flex'; // Show error message
     });
     
-    webview.addEventListener('did-navigate', function(event) {
-        console.log('Navigated to:', event.url);
-        updateNavigationButtons();
-        updateUrlBar();
-    });
+    // Create the context menu
+    // Note: The 'remote' module is deprecated, but for this simple use case
+    // it's the most straightforward approach. For production, you'd use IPC.
+    const { Menu, MenuItem } = require('@electron/remote');
     
-    webview.addEventListener('did-navigate-in-page', function(event) {
-        console.log('Navigated in page to:', event.url);
-        updateNavigationButtons();
-        updateUrlBar();
-    });
+    const menu = new Menu();
+    menu.append(new MenuItem({ label: 'Back', click: () => webview.goBack(), enabled: false }));
+    menu.append(new MenuItem({ label: 'Forward', click: () => webview.goForward(), enabled: false }));
+    menu.append(new MenuItem({ type: 'separator' }));
+    menu.append(new MenuItem({ label: 'Reload', click: () => webview.reload() }));
+    menu.append(new MenuItem({ label: 'Go Home', click: () => webview.loadURL(homeUrl) }));
     
-    webview.addEventListener('page-title-updated', function(event) {
-        document.title = `${event.title} - ProSpine Admin`;
-    });
-    
-    // Navigation functions
-    function updateNavigationButtons() {
-        if (webview) {
-            backBtn.disabled = !webview.canGoBack();
-            forwardBtn.disabled = !webview.canGoForward();
-        }
-    }
-    
-    function updateUrlBar() {
-        if (webview) {
-            urlBar.value = webview.getURL();
-        }
-    }
-    
-    // Global functions for button clicks
-    window.goBack = function() {
-        if (webview && webview.canGoBack()) {
-            webview.goBack();
-        }
-    };
-    
-    window.goForward = function() {
-        if (webview && webview.canGoForward()) {
-            webview.goForward();
-        }
-    };
-    
-    window.refreshPage = function() {
-        if (webview) {
-            webview.reload();
-        }
-    };
-    
-    window.goHome = function() {
-        if (webview) {
-            webview.loadURL(homeUrl);
-        }
-    };
-    
-    // Handle webview console messages for debugging
-    webview.addEventListener('console-message', function(e) {
-        console.log('Webview console:', e.message);
+    // Show the context menu on right-click
+    webview.addEventListener('context-menu', (e) => {
+        e.preventDefault();
+        
+        // Update menu item states before showing
+        menu.items[0].enabled = webview.canGoBack();
+        menu.items[1].enabled = webview.canGoForward();
+        
+        menu.popup();
     });
     
     // Handle new window requests (open in external browser)
@@ -108,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Security: Handle permission requests
     webview.addEventListener('permission-request', function(e) {
-        // Allow notifications and other safe permissions
         if (e.permission === 'notifications' || e.permission === 'geolocation') {
             e.request.allow();
         } else {
@@ -116,10 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Handle certificate errors
     webview.addEventListener('certificate-error', function(e) {
         console.warn('Certificate error:', e.error);
-        // You might want to show a warning to the user here
     });
     
     console.log('Renderer script loaded');

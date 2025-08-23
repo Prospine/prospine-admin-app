@@ -88,6 +88,13 @@ obj/
 *.ear
 *.nar
 
+# Arch Linux packages
+*.pkg.tar.xz
+*.pkg.tar.zst
+*.pkg.tar.gz
+archlinux/pkg/
+archlinux/src/
+
 # Compiled files
 *.class
 *.o

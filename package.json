@@ -1,18 +1,130 @@
 {
   "name": "prospine-admin-app",
   "version": "1.0.0",
-  "description": "Electron desktop app for ProSpine Admin Portal",
+  "description": "Desktop app for ProSpine Admin Portal",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --enable-logging",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux",
+    "dist:all": "electron-builder --win --mac --linux",
+    "postinstall": "electron-builder install-app-deps"
   },
-  "keywords": ["electron", "prospine", "admin", "webview"],
-  "author": "ProSpine Admin App",
+  "keywords": [
+    "electron",
+    "prospine",
+    "admin",
+    "webview"
+  ],
+  "author": {
+    "name": "ProSpine Admin App",
+    "email": "admin@prospine.com"
+  },
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^37.3.1"
+    "electron": "^37.3.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.sumit_srivastava.prospine",
+    "productName": "ProSpine Admin Portal",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "preload.js",
+      "index.html",
+      "icon.png",
+      "node_modules/**/*",
+      "!node_modules/.cache"
+    ],
+    "extraMetadata": {
+      "main": "main.js"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icon.png",
+      "publish": null
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "icon.png",
+      "category": "public.app-category.business",
+      "publish": null
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icon.png",
+      "category": "Office",
+      "publish": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
   }
 }

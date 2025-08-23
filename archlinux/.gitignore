@@ -1,0 +1,25 @@
+# Arch Linux package build artifacts
+*.pkg.tar.xz
+*.pkg.tar.zst
+*.pkg.tar.gz
+
+# Build directories
+pkg/
+src/
+
+# Makepkg logs
+*.log
+
+# Temporary files
+*~
+*.swp
+*.swo
+
+# Debug packages
+*-debug-*.pkg.tar.*
+
+# Local makepkg config
+makepkg.conf
+
+# SRCINFO is generated automatically
+.SRCINFO
