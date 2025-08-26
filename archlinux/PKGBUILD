@@ -15,12 +15,12 @@ md5sums=()
 
 # Get version from package.json automatically
 pkgver() {
-    cd "$srcdir/.."
+    cd "$startdir/.."
     node -pe "require('./package.json').version"
 }
 
 prepare() {
-    cd "$srcdir/.."
+    cd "$startdir/.."
     
     # Clean any existing builds
     rm -rf dist/
@@ -32,11 +32,11 @@ prepare() {
 }
 
 build() {
-    cd "$srcdir/.."
+    cd "$startdir/.."
     
-    # Build the Electron application
+    # Build the Electron application (unpacked only)
     echo "Building Electron application..."
-    npm run dist
+    npx electron-builder --linux dir
     
     # Verify build was successful
     if [ ! -d "dist/linux-unpacked" ]; then
@@ -57,7 +57,7 @@ package() {
     install -dm755 "$pkgdir/opt/$pkgname"
     
     # Copy all application files from build output
-    cp -r "$srcdir/../dist/linux-unpacked/"* "$pkgdir/opt/$pkgname/"
+    cp -r "$startdir/../dist/linux-unpacked/"* "$pkgdir/opt/$pkgname/"
     
     # Set executable permissions
     chmod +x "$pkgdir/opt/$pkgname/$pkgname"
@@ -82,27 +82,27 @@ EOF
     ln -s "/opt/$pkgname/$pkgname" "$pkgdir/usr/bin/$pkgname"
     
     # Install application icon
-    if [ -f "$srcdir/../icon.png" ]; then
+    if [ -f "$startdir/../icon.png" ]; then
         install -dm755 "$pkgdir/usr/share/icons/hicolor/256x256/apps"
-        install -Dm644 "$srcdir/../icon.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/$pkgname.png"
+        install -Dm644 "$startdir/../icon.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/$pkgname.png"
         
         # Also install in other common sizes if we have them
         for size in 16 32 48 64 128 512; do
-            if [ -f "$srcdir/../icons/${size}x${size}.png" ]; then
+            if [ -f "$startdir/../icons/${size}x${size}.png" ]; then
                 install -dm755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-                install -Dm644 "$srcdir/../icons/${size}x${size}.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
+                install -Dm644 "$startdir/../icons/${size}x${size}.png" "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
             fi
         done
     fi
     
     # Install license
-    if [ -f "$srcdir/../LICENSE" ]; then
-        install -Dm644 "$srcdir/../LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    if [ -f "$startdir/../LICENSE" ]; then
+        install -Dm644 "$startdir/../LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     fi
     
     # Install documentation
-    if [ -f "$srcdir/../README.md" ]; then
-        install -Dm644 "$srcdir/../README.md" "$pkgdir/usr/share/doc/$pkgname/README.md"
+    if [ -f "$startdir/../README.md" ]; then
+        install -Dm644 "$startdir/../README.md" "$pkgdir/usr/share/doc/$pkgname/README.md"
     fi
 }
 
